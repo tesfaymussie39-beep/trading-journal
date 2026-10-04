@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TradeHub - Advanced Trading Journal</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">T</div>
+        <div>
+          <div style="font-weight:800;">TradeHub</div>
+          <small style="color:var(--muted)">Journal</small>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a class="nav-item active" href="#" data-view="dashboard">🏠 Dashboard</a>
+        <a class="nav-item" href="#" data-view="calendar">📅 Calendar</a>
+        <a class="nav-item" href="#" data-view="analytics">📊 Analytics</a>
+        <a class="nav-item" href="#" data-view="psychology">🧠 Psychology</a>
+        <a class="nav-item" href="#" data-view="setup">⚙️ Setup Rules</a>
+        <a class="nav-item" href="#" data-view="trades">📝 All Trades</a>
+      </nav>
+
+      <div class="badge">
+        <h4>Execution Score</h4>
+        <p class="score" id="executionScore">82%</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <!-- DASHBOARD VIEW -->
+      <div id="dashboard-view" class="view active">
+        <div class="topbar">
+          <div class="title-group">
+            <h1>Trading Dashboard</h1>
+            <p id="dashboardDate">Weekly performance overview</p>
+          </div>
+
+          <div class="top-actions">
+            <select id="timeframeSelect" class="chip">
+              <option value="week">This Week</option>
+              <option value="month" selected>This Month</option>
+              <option value="quarter">This Quarter</option>
+              <option value="year">This Year</option>
+              <option value="all">All Time</option>
+            </select>
+            <button class="chip primary" id="addTradeBtn">+ Add Trade</button>
+          </div>
+        </div>
+
+        <section class="stats" id="dashboardStats">
+          <!-- Stats populated by JS -->
+        </section>
+
+        <section class="content-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Trade Calendar</h3>
+              <div class="mini-row">
+                <span id="calendarMonth">October 2026</span>
+              </div>
+            </div>
+
+            <div class="calendar-wrap">
+              <div class="calendar-nav">
+                <button id="prevMonth" class="nav-btn">←</button>
+                <span id="monthYear"></span>
+                <button id="nextMonth" class="nav-btn">→</button>
+              </div>
+
+              <div class="calendar-head">
+                <div>Sun</div>
+                <div>Mon</div>
+                <div>Tue</div>
+                <div>Wed</div>
+                <div>Thu</div>
+                <div>Fri</div>
+                <div>Sat</div>
+              </div>
+
+              <div class="calendar-grid" id="calendarGrid">
+                <!-- Calendar populated by JS -->
+              </div>
+            </div>
+          </div>
+
+          <div class="right-stack">
+            <div class="panel setup-box">
+              <div class="panel-header">
+                <h3>Entry Setup Quality</h3>
+                <span class="score-pill good" id="setupQualityBadge">Strong</span>
+              </div>
+              <div style="padding:20px">
+                <div class="row">
+                  <span class="label">Average Setup Score</span>
+                  <strong id="setupQualityScore">8.7 / 10</strong>
+                </div>
+                <div class="meter"><span id="setupQualityMeter" style="width:87%"></span></div>
+
+                <div id="topSetupsContainer">
+                  <!-- Top setups populated by JS -->
+                </div>
+              </div>
+            </div>
+
+            <div class="panel emotion-box">
+              <div class="panel-header">
+                <h3>Emotion Tracking</h3>
+                <span class="score-pill warn" id="emotionBadge">Focused</span>
+              </div>
+              <div style="padding:20px">
+                <div class="emotion-level">
+                  <div class="number" id="averageEmotion">6.2</div>
+                  <div class="emotion-scale">
+                    <div class="scale-row">
+                      <span style="color:var(--muted);font-size:12px;">calm</span>
+                      <div class="scale-bar"><span id="emotionMeter" style="width:52%"></span></div>
+                      <span style="color:var(--muted);font-size:12px;">high</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="emotion-stats">
+                  <div class="stat-mini">
+                    <span class="label">Best Sessions</span>
+                    <strong id="bestEmotionSessions">—</strong>
+                  </div>
+                  <div class="stat-mini">
+                    <span class="label">Calm Win Rate</span>
+                    <strong id="calmWinRate">—</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="content-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Recent Trades</h3>
+              <div class="mini-row">
+                <span id="recentTradesCount">Last trades</span>
+              </div>
+            </div>
+
+            <div class="trade-list" id="recentTradesList">
+              <!-- Recent trades populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Trade Summary</h3>
+              <span class="score-pill good">On Track</span>
+            </div>
+
+            <div class="trade-summary">
+              <div class="summary-grid">
+                <div class="summary-box">
+                  <small>Best Trade</small>
+                  <strong id="bestTrade" style="color:var(--green)">+$0</strong>
+                </div>
+
+                <div class="summary-box">
+                  <small>Worst Trade</small>
+                  <strong id="worstTrade" style="color:var(--red)">-$0</strong>
+                </div>
+
+                <div class="summary-box">
+                  <small>Avg. R</small>
+                  <strong id="avgR">0R</strong>
+                </div>
+
+                <div class="summary-box">
+                  <small>Total Sessions</small>
+                  <strong id="totalSessions">0</strong>
+                </div>
+              </div>
+
+              <div class="trade-card">
+                <div class="trade-head">
+                  <span class="trade-pair">R-Multiple Total</span>
+                  <span id="rMultiple" class="gain">+0R</span>
+                </div>
+                <div class="meta">
+                  <span class="pill" id="biasPill">Neutral</span>
+                  <span class="pill" id="executionPill">—</span>
+                  <span class="pill" id="riskPill">—</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- CALENDAR VIEW -->
+      <div id="calendar-view" class="view">
+        <div class="topbar">
+          <div class="title-group">
+            <h1>Trade Calendar</h1>
+            <p>Detailed monthly view with all trades</p>
+          </div>
+          <button class="chip primary" id="addTradeBtn2">+ Add Trade</button>
+        </div>
+
+        <div class="panel" style="margin: 0;">
+          <div class="panel-header">
+            <h3 id="calendarViewMonth">October 2026</h3>
+            <div class="mini-row">
+              <button id="prevMonthCal" class="nav-btn">← Prev</button>
+              <button id="nextMonthCal" class="nav-btn">Next →</button>
+            </div>
+          </div>
+
+          <div class="calendar-wrap">
+            <div class="calendar-head-large">
+              <div>Sunday</div>
+              <div>Monday</div>
+              <div>Tuesday</div>
+              <div>Wednesday</div>
+              <div>Thursday</div>
+              <div>Friday</div>
+              <div>Saturday</div>
+            </div>
+
+            <div class="calendar-grid-large" id="calendarGridLarge">
+              <!-- Large calendar populated by JS -->
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top: 22px;">
+          <div class="panel-header">
+            <h3>Day Details</h3>
+            <span id="selectedDayLabel">Click a day</span>
+          </div>
+          <div id="dayDetailsContent" style="padding: 20px;">
+            <p style="color: var(--muted); text-align: center;">Select a day to view trades</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ANALYTICS VIEW -->
+      <div id="analytics-view" class="view">
+        <div class="topbar">
+          <div class="title-group">
+            <h1>Trade Analytics</h1>
+            <p>Deep insights into your trading performance</p>
+          </div>
+          <select id="analyticsTimeframe" class="chip">
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="quarter">This Quarter</option>
+            <option value="year">This Year</option>
+          </select>
+        </div>
+
+        <section class="analytics-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Win Rate Analysis</h3>
+            </div>
+            <div class="chart-container">
+              <div class="chart-pie" id="winRateChart">
+                <svg viewBox="0 0 100 100" style="max-width: 200px; margin: 0 auto;">
+                  <circle id="winRateCircle" cx="50" cy="50" r="40" fill="none" stroke="var(--green)" stroke-width="8" stroke-dasharray="0 251" stroke-linecap="round" transform="rotate(-90 50 50)"></circle>
+                </svg>
+              </div>
+              <div class="chart-legend">
+                <div class="legend-item">
+                  <span class="dot win"></span>
+                  <span>Winning Trades: <strong id="winningTradesCount">0</strong></span>
+                </div>
+                <div class="legend-item">
+                  <span class="dot loss"></span>
+                  <span>Losing Trades: <strong id="losingTradesCount">0</strong></span>
+                </div>
+                <div class="legend-item">
+                  <span class="dot neutral"></span>
+                  <span>Breakeven: <strong id="breakevenTradesCount">0</strong></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>P&L by Instrument</h3>
+            </div>
+            <div id="instrumentAnalysis" style="padding: 20px;">
+              <!-- Instrument data populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Performance Metrics</h3>
+            </div>
+            <div id="performanceMetrics" style="padding: 20px;">
+              <!-- Performance metrics populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Trade Distribution</h3>
+            </div>
+            <div id="tradeDistribution" style="padding: 20px;">
+              <div class="bar-chart">
+                <div class="bar-group">
+                  <div class="bar-label">Long</div>
+                  <div class="bar-container">
+                    <div class="bar" id="longBar" style="width: 0%; background: var(--blue);"></div>
+                  </div>
+                  <div class="bar-count" id="longCount">0</div>
+                </div>
+                <div class="bar-group">
+                  <div class="bar-label">Short</div>
+                  <div class="bar-container">
+                    <div class="bar" id="shortBar" style="width: 0%; background: var(--red);"></div>
+                  </div>
+                  <div class="bar-count" id="shortCount">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Daily P&L Trend</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="pnlChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Trade Setup Types</h3>
+            </div>
+            <div id="setupTypes" style="padding: 20px;">
+              <!-- Setup types populated by JS -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- PSYCHOLOGY VIEW -->
+      <div id="psychology-view" class="view">
+        <div class="topbar">
+          <div class="title-group">
+            <h1>Psychology & Emotion Tracking</h1>
+            <p>Monitor your emotional state and decision-making patterns</p>
+          </div>
+          <select id="psychologyTimeframe" class="chip">
+            <option value="week">This Week</option>
+            <option value="month" selected>This Month</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+
+        <section class="psychology-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Emotion vs. Performance</h3>
+            </div>
+            <div id="emotionPerformance" style="padding: 20px;">
+              <!-- Emotion performance data populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Emotion Distribution</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="emotionChart" width="300" height="200"></canvas>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Session Notes</h3>
+            </div>
+            <div id="sessionNotes" style="padding: 20px;">
+              <!-- Session notes populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Emotion Trends</h3>
+            </div>
+            <div class="chart-container">
+              <canvas id="emotionTrendChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+
+          <div class="panel" style="grid-column: 1 / -1;">
+            <div class="panel-header">
+              <h3>Recent Emotion Logs</h3>
+            </div>
+            <div id="emotionLogsList" style="padding: 20px;">
+              <!-- Emotion logs populated by JS -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- SETUP RULES VIEW -->
+      <div id="setup-view" class="view">
+        <div class="topbar">
+          <div class="title-group">
+            <h1>Setup Rules & Entry Criteria</h1>
+            <p>Define and track your trading setups</p>
+          </div>
+          <button class="chip primary" id="addSetupBtn">+ Add Setup Rule</button>
+        </div>
+
+        <section class="setup-grid">
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Your Setup Rules</h3>
+              <span class="score-pill" id="setupCount">0 setups</span>
+            </div>
+            <div id="setupRulesList" style="padding: 20px;">
+              <!-- Setup rules populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-header">
+              <h3>Setup Performance</h3>
+            </div>
+            <div id="setupPerformance" style="padding: 20px;">
+              <!-- Setup performance populated by JS -->
+            </div>
+          </div>
+
+          <div class="panel" style="grid-column: 1 / -1;">
+            <div class="panel-header">
+              <h3>Setup Statistics</h3>
+            </div>
+            <div id="setupStats" style="padding: 20px;">
+              <!-- Setup stats populated by JS -->
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ALL TRADES VIEW -->
+      <div id="trades-view" class="view">
+        <div class="topbar">
+          <div class="title-group">
+            <h1>All Trades</h1>
+            <p>Complete trading history and details</p>
+          </div>
+          <button class="chip primary" id="addTradeBtn3">+ Add Trade</button>
+        </div>
+
+        <div class="trades-filter-bar">
+          <input type="text" id="tradeSearchBox" placeholder="Search by symbol, setup..." class="filter-input">
+          <select id="filterInstrument" class="filter-select">
+            <option value="">All Instruments</option>
+          </select>
+          <select id="filterDirection" class="filter-select">
+            <option value="">All Directions</option>
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+          <select id="filterStatus" class="filter-select">
+            <option value="">All Status</option>
+            <option value="win">Win</option>
+            <option value="loss">Loss</option>
+            <option value="breakeven">Breakeven</option>
+          </select>
+          <select id="tradesSortBy" class="filter-select">
+            <option value="date-desc">Newest First</option>
+            <option value="date-asc">Oldest First</option>
+            <option value="pnl-desc">Largest Gain</option>
+            <option value="pnl-asc">Largest Loss</option>
+          </select>
+        </div>
+
+        <div class="trades-table-container">
+          <div class="trades-table">
+            <div class="table-header">
+              <div class="col-date">Date</div>
+              <div class="col-symbol">Symbol</div>
+              <div class="col-direction">Direction</div>
+              <div class="col-entry">Entry</div>
+              <div class="col-exit">Exit</div>
+              <div class="col-setup">Setup</div>
+              <div class="col-pnl">P&L</div>
+              <div class="col-r">R-Multiple</div>
+              <div class="col-emotion">Emotion</div>
+              <div class="col-level">Level</div>
+              <div class="col-actions">Actions</div>
+            </div>
+            <div id="tradesTableBody">
+              <!-- Trades populated by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- MODALS -->
+  <div id="tradeModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="tradeModalTitle">Add Trade</h2>
+        <button class="modal-close" id="closeTradeModal">&times;</button>
+      </div>
+
+      <form id="tradeForm" class="trade-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Date *</label>
+            <input type="date" id="tradeDate" required>
+          </div>
+          <div class="form-group">
+            <label>Time *</label>
+            <input type="time" id="tradeTime" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Instrument/Symbol *</label>
+            <input type="text" id="tradeSymbol" placeholder="EUR/USD, BTC/USD, NQ..." required>
+          </div>
+          <div class="form-group">
+            <label>Direction *</label>
+            <select id="tradeDirection" required>
+              <option value="">Select direction</option>
+              <option value="long">Long</option>
+              <option value="short">Short</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Entry Price *</label>
+            <input type="number" id="tradeEntry" placeholder="0.00" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Exit Price *</label>
+            <input type="number" id="tradeExit" placeholder="0.00" step="0.01" required>
+          </div>
+          <div class="form-group">
+            <label>Position Size</label>
+            <input type="number" id="tradeSize" placeholder="0.0" step="0.1">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Risk Amount ($)</label>
+            <input type="number" id="tradeRisk" placeholder="0.00" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Reward Amount ($)</label>
+            <input type="number" id="tradeReward" placeholder="0.00" step="0.01">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Setup Type</label>
+            <input type="text" id="tradeSetup" placeholder="Breakout, Trend, Range, etc.">
+          </div>
+          <div class="form-group">
+            <label>Setup Quality (1-10)</label>
+            <div class="rating-input">
+              <input type="range" id="tradeSetupQuality" min="1" max="10" value="5">
+              <span id="setupQualityDisplay">5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Emotion Level (1-10)</label>
+            <div class="rating-input">
+              <input type="range" id="tradeEmotion" min="1" max="10" value="5">
+              <span id="emotionDisplay">5</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Trade Level/Confidence (1-10)</label>
+            <div class="rating-input">
+              <input type="range" id="tradeLevel" min="1" max="10" value="5">
+              <span id="tradeLevelDisplay">5</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="tradeNotes" placeholder="Write down your observations, lessons, emotions..."></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" id="cancelTradeBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Save Trade</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="setupModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Add Setup Rule</h2>
+        <button class="modal-close" id="closeSetupModal">&times;</button>
+      </div>
+
+      <form id="setupForm" class="trade-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Setup Name *</label>
+            <input type="text" id="setupName" placeholder="e.g., VWAP Breakout" required>
+          </div>
+          <div class="form-group">
+            <label>Category</label>
+            <select id="setupCategory">
+              <option value="">Select category</option>
+              <option value="breakout">Breakout</option>
+              <option value="trend">Trend</option>
+              <option value="range">Range</option>
+              <option value="reversal">Reversal</option>
+              <option value="pullback">Pullback</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="setupDescription" placeholder="Describe your setup criteria..."></textarea>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Instruments</label>
+            <input type="text" id="setupInstruments" placeholder="EUR/USD, BTC/USD, NQ, etc.">
+          </div>
+          <div class="form-group">
+            <label>Timeframe</label>
+            <input type="text" id="setupTimeframe" placeholder="1H, 4H, Daily, etc.">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" id="cancelSetupBtn">Cancel</button>
+          <button type="submit" class="btn-primary">Save Setup</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content modal-small">
+      <div class="modal-header">
+        <h2>Confirm Delete</h2>
+      </div>
+      <p style="padding: 20px 20px 0; color: var(--muted);">Are you sure you want to delete this item? This action cannot be undone.</p>
+      <div class="form-actions" style="padding: 20px;">
+        <button type="button" class="btn-cancel" id="cancelDeleteBtn">Cancel</button>
+        <button type="button" class="btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
